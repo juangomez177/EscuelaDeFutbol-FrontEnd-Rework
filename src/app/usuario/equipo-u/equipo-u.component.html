@@ -1,0 +1,299 @@
+<p>Visualización de equipos</p>
+
+<!-- Mostrar lista de equipos -->
+<div *ngIf="lista">
+  <h2>Equipos disponibles</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Nombre de equipo</th>
+        <th>Categoría</th>
+        <th>Capitán</th>
+        <th>Entrenador</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipo of equipos">
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ equipo.logo }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ equipo.nombre_equipo }}</td>
+        <td>{{ equipo.categoria }}</td>
+        <td>{{ equipo.capitan }}</td>
+        <td>{{ equipo.entrenador }}</td>
+        <td>
+          <button
+            type="button"
+            class="edit"
+            title="edit equipo"
+            (click)="lista = false; editForm = true; detallesEquipo(equipo)"
+          >
+            Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Visualizar Equipo -->
+<div *ngIf="editForm && equipoSeleccionado">
+  <h2>Visualizando equipo: {{ equipoSeleccionado.nombre_equipo }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-logo">Logo:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              equipoSeleccionado.logo
+            }}"
+            style="width: 200px; height: 250px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-equipo">Nombre: </label>
+        <input
+          id="edit-equipo"
+          readonly
+          [(ngModel)]="equipoSeleccionado.nombre_equipo"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-categoria">Categoría: </label>
+        <input
+          id="edit-categoria"
+          readonly
+          [(ngModel)]="equipoSeleccionado.categoria"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-descripcion">Descripción:</label>
+        <textarea
+          id="edit-descripcion"
+          [(ngModel)]="equipoSeleccionado.descripcion"
+          readonly
+          rows="4"
+          style="width: 89%"
+        ></textarea>
+      </div>
+      <div class="form-field">
+        <label for="edit-capitan">Capitan: </label>
+        <input
+          id="edit-capitan"
+          readonly
+          [(ngModel)]="equipoSeleccionado.capitan"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-entrenador">Entrenador: </label>
+        <input
+          id="edit-entrenador"
+          readonly
+          [(ngModel)]="equipoSeleccionado.entrenador"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); editForm = false; lista = true"
+    >
+      Volver
+    </button>
+  </div>
+
+  <!-- Mostrar lista de jugadores de cada equipo -->
+  <h2>Jugadores</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Foto</th>
+        <th>Edad</th>
+        <th>Categoría</th>
+        <th>Nombre Equipo</th>
+        <th>Posición</th>
+        <th>Número de Camiseta</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let jugador of jugadores">
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ jugador.foto }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ jugador.nombre }}</td>
+        <td>{{ jugador.edad }}</td>
+        <td>{{ jugador.categoria }}</td>
+        <td>{{ jugador.nombre_equipo }}</td>
+        <td>{{ jugador.posicion }}</td>
+        <td>{{ jugador.n_camiseta }}</td>
+
+        <td>
+          <button
+            type="button"
+            class="edit"
+            title="details jugador"
+            [routerLink]="['/aso-futbol/usuario/jugador', jugador.id]"
+          >
+            Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mostrar lista de partidos de cada equipo -->
+  <h2>Partidos</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Estado</th>
+        <th>Goles Favor</th>
+        <th>Goles Contra</th>
+        <th>Faltas Cometidas</th>
+        <th>Faltas Recibidas</th>
+        <th>Fecha</th>
+        <th>Lugar</th>
+        <th>Rival</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let partido of partidos">
+        <td>{{ partido.estado }}</td>
+        <td>{{ partido.goles_favor }}</td>
+        <td>{{ partido.goles_contra }}</td>
+        <td>{{ partido.faltas_cometidas }}</td>
+        <td>{{ partido.faltas_recibidas }}</td>
+        <td>{{ partido.fecha }}</td>
+        <td>{{ partido.lugar }}</td>
+        <td>{{ partido.equipo_rival }}</td>
+        <td>
+          <button
+            type="button"
+            class="edit"
+            title="details equipo"
+            (click)="
+              editForm = false; editFormP = true; detallesPartido(partido)
+            "
+          >
+            Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Visualizar Partido -->
+<div *ngIf="editFormP && partidoSeleccionado && equipoSeleccionado">
+  <h2>Detalles Partido para equipo: {{ equipoSeleccionado.nombre_equipo }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="edit-partido">Estado: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="text"
+          [(ngModel)]="partidoSeleccionado.estado"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-partido">Goles Favor: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="number"
+          [(ngModel)]="partidoSeleccionado.goles_favor"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Goles Contra: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="number"
+          [(ngModel)]="partidoSeleccionado.goles_contra"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Faltas Cometidas: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="number"
+          [(ngModel)]="partidoSeleccionado.faltas_cometidas"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Faltas Recibidas: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="number"
+          [(ngModel)]="partidoSeleccionado.faltas_recibidas"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Fecha: </label>
+        <input
+          id="edit-partido"
+          readonly
+          [(ngModel)]="partidoSeleccionado.fecha"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Lugar: </label>
+        <input
+          id="edit-partido"
+          readonly
+          type="text"
+          [(ngModel)]="partidoSeleccionado.lugar"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Equipo Rival: </label>
+        <input
+          id="edit-partido"
+          readonly
+          [(ngModel)]="partidoSeleccionado.equipo_rival"
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="editFormP = false; editForm = true"
+    >
+      Volver
+    </button>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="footer-title">Edición de Contacto <br /></h4>
+        <div class="footer-info-container">
+          <div class="info-icon">
+            <fa-icon [icon]="phoneIcon"></fa-icon>
+            <input
+              [(ngModel)]="infoAsoFutbol.telefono"
+              placeholder="Teléfono"
+            />
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="envelopeIcon"></fa-icon>
+            <input [(ngModel)]="infoAsoFutbol.correo" placeholder="Correo" />
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="mapMarkerIcon"></fa-icon>
+            <input
+              [(ngModel)]="infoAsoFutbol.direccion"
+              placeholder="Dirección"
+            />
+          </div>
+
+          <div class="info-icon">
+            <fa-icon [icon]="facebookIcon"></fa-icon>
+            <input
+              [(ngModel)]="infoAsoFutbol.facebook"
+              placeholder="Facebook"
+            />
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="xIcon"></fa-icon>
+            <input [(ngModel)]="infoAsoFutbol.x" placeholder="X" />
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="instagramIcon"></fa-icon>
+            <input
+              [(ngModel)]="infoAsoFutbol.instagram"
+              placeholder="Instagram"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="sponsor-logos">
+          <div>
+            <img
+              src="https://files-asofutbol.s3.amazonaws.com/{{
+                infoAsoFutbol.sponsor1
+              }}"
+              onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+            />
+            <br />
+            <br />
+            <input
+              style="width: 300px"
+              id="file-upload"
+              type="file"
+              (change)="onFileSelected($event); sp1 = true"
+            />
+          </div>
+
+          <div>
+            <img
+              src="https://files-asofutbol.s3.amazonaws.com/{{
+                infoAsoFutbol.sponsor2
+              }}"
+              onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+            />
+            <br />
+            <br />
+            <input
+              style="width: 300px"
+              id="file-upload"
+              type="file"
+              (change)="onFileSelected($event); sp2 = true"
+            />
+          </div>
+
+          <div>
+            <img
+              src="https://files-asofutbol.s3.amazonaws.com/{{
+                infoAsoFutbol.sponsor3
+              }}"
+              onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+            />
+            <br />
+            <br />
+            <input
+              style="width: 300px"
+              id="file-upload"
+              type="file"
+              (change)="onFileSelected($event); sp3 = true"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <button (click)="saveChanges()">Guardar Cambios</button>
+    <br />
+    <br />
+  </div>
+</footer>

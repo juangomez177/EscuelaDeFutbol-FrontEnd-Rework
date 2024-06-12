@@ -1,0 +1,353 @@
+<p>Gestión de jugadores</p>
+
+<div *ngIf="lista">
+  <!-- Mostrar lista de jugadores -->
+  <h2>Mis Jugadores</h2>
+
+  <!-- Botón Agregar -->
+  <div>
+    <button
+      type="button"
+      class="add-button"
+      [routerLink]="['/administrador/jugador/nuevo']"
+      (click)="lista = false; form = true"
+    >
+      Agregar jugador
+    </button>
+  </div>
+
+  <div>
+    <input
+      type="text"
+      [(ngModel)]="filtro"
+      (input)="filtrarJugadores()"
+      placeholder="Filtro para jugadores"
+    />
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ID Equipo</th>
+        <th>Foto</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Categoría</th>
+        <th>Nombre Equipo</th>
+        <th>Posición</th>
+        <th>Número de Camiseta</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let jugador of jugadoresFiltrados">
+        <td>{{ jugador.id }}</td>
+        <td>{{ jugador.id_equipo }}</td>
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ jugador.foto }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ jugador.nombre }}</td>
+        <td>{{ jugador.edad }}</td>
+        <td>{{ jugador.categoria }}</td>
+        <td>{{ jugador.nombre_equipo }}</td>
+        <td>{{ jugador.posicion }}</td>
+        <td>{{ jugador.n_camiseta }}</td>
+        <td>{{ jugador.telefono }}</td>
+        <td>{{ jugador.correo }}</td>
+        <td>
+          <button
+            type="button"
+            class="delete"
+            title="delete jugador"
+            (click)="delete(jugador)"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            class="edit"
+            title="edit jugador"
+            (click)="lista = false; editForm = true; editarJugador(jugador)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Agregar jugador -->
+<div *ngIf="form">
+  <h2>Nuevo Jugador</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-foto">Foto:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              jugadorSeleccionado.foto
+            }}"
+            style="width: 200px; height: 250px"
+          />
+          <br />
+          <br />
+          <input
+            style="width: 300px"
+            id="file-upload"
+            type="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="new-name">Nombre: </label>
+        <input id="new-name" required #nombre />
+      </div>
+      <div class="form-field">
+        <label for="new-edad">Edad: </label>
+        <input id="new-edad" type="number" #edad />
+      </div>
+      <div class="form-field">
+        <label for="new-equipo">Equipo: </label>
+        <select id="new-equipo" [(ngModel)]="equipoSeleccionado">
+          <option
+            *ngFor="let equipo of equipos"
+            [ngValue]="{
+              id_equipo: equipo.id,
+              nombre_equipo: equipo.nombre_equipo,
+              categoria: equipo.categoria
+            }"
+          >
+            {{ equipo.nombre_equipo }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="new-posicion">Posición: </label>
+        <select id="new-posicion" #posicion>
+          <option value="nada"></option>
+          <option value="Portero">Portero</option>
+          <option value="Defensa">Defensa</option>
+          <option value="Centrocampista">Centrocampista</option>
+          <option value="Delantero">Delantero</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="new-camiseta">Número de Camiseta: </label>
+        <input id="new-camiseta" type="number" #camiseta />
+      </div>
+      <div class="form-field">
+        <label for="new-telefono">Teléfono: </label>
+        <input id="new-telefono" type="tel" #telefono />
+      </div>
+      <div class="form-field">
+        <label for="new-correo">Correo: </label>
+        <input id="new-correo" type="email" #correo />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      type="button"
+      class="add-button"
+      (click)="
+        add(
+          equipoSeleccionado.id_equipo,
+          nombre.value,
+          edad.value,
+          equipoSeleccionado.categoria,
+          equipoSeleccionado.nombre_equipo,
+          posicion.value,
+          camiseta.value,
+          telefono.value,
+          correo.value
+        );
+        nombre.value = '';
+        edad.value = '';
+        posicion.value = '';
+        camiseta.value = '';
+        telefono.value = '';
+        correo.value = '';
+        selectedFile = null
+      "
+    >
+      Agregar
+    </button>
+
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); lista = true; form = false"
+    >
+      Volver
+    </button>
+
+    <!-- Botón Limpiar -->
+    <button
+      type="button"
+      class="limpiar"
+      (click)="
+        mostrarSweetAlert2();
+        nombre.value = '';
+        edad.value = '';
+        posicion.value = '';
+        camiseta.value = '';
+        telefono.value = '';
+        correo.value = '';
+        selectedFile = null
+      "
+    >
+      Limpiar
+    </button>
+  </div>
+</div>
+
+<!-- Formulario Editar jugador -->
+<div *ngIf="editForm && jugadorSeleccionado">
+  <h2>Editando Jugador: {{ jugadorSeleccionado.nombre }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-Foto">Foto:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              jugadorSeleccionado.foto
+            }}"
+            style="width: 200px; height: 250px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+          <br />
+          <br />
+          <input
+            style="width: 300px"
+            id="file-upload"
+            type="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-jugador">Nombre </label>
+        <input id="edit-jugador" [(ngModel)]="jugadorSeleccionado.nombre" />
+      </div>
+      <div class="form-field">
+        <label for="edit-edad">Edad: </label>
+        <input
+          id="edit-edad"
+          type="number"
+          [(ngModel)]="jugadorSeleccionado.edad"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-equipo">Equipo: </label>
+        <select
+          id="edit-equipo"
+          [(ngModel)]="jugadorSeleccionado.nombre_equipo"
+        >
+          <option [value]="jugadorSeleccionado.nombre_equipo">
+            {{ jugadorSeleccionado.nombre_equipo }}
+          </option>
+          <ng-container *ngFor="let equipo of equipos">
+            <option
+              *ngIf="equipo.id !== jugadorSeleccionado.id_equipo"
+              [value]="equipo.nombre_equipo"
+            >
+              {{ equipo.nombre_equipo }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-partido">Posición: </label>
+        <select id="edit-partido" [(ngModel)]="jugadorSeleccionado.posicion">
+          <option [ngValue]="jugadorSeleccionado.posicion">
+            {{ jugadorSeleccionado.posicion }}
+          </option>
+          <option
+            *ngIf="jugadorSeleccionado.posicion !== 'Portero'"
+            value="Portero"
+          >
+            Portero
+          </option>
+          <option
+            *ngIf="jugadorSeleccionado.posicion !== 'Defensa'"
+            value="Defensa"
+          >
+            Defensa
+          </option>
+          <option
+            *ngIf="jugadorSeleccionado.posicion !== 'Centrocampista'"
+            value="Centrocampista"
+          >
+            Centrocampista
+          </option>
+          <option
+            *ngIf="jugadorSeleccionado.posicion !== 'Delantero'"
+            value="Delantero"
+          >
+            Delantero
+          </option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="edit-camiseta">Número de Camiseta: </label>
+        <input
+          id="edit-camiseta"
+          type="number"
+          [(ngModel)]="jugadorSeleccionado.n_camiseta"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-telefono">Teléfono: </label>
+        <input
+          id="edit-telefono"
+          type="tel"
+          [(ngModel)]="jugadorSeleccionado.telefono"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-correo">Correo: </label>
+        <input
+          id="edit-correo"
+          type="email"
+          [(ngModel)]="jugadorSeleccionado.correo"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button
+      type="button"
+      class="add-button"
+      (click)="edit(jugadorSeleccionado); editForm = false; lista = true"
+    >
+      Guardar
+    </button>
+
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); editForm = false; lista = true"
+    >
+      Volver
+    </button>
+  </div>
+</div>

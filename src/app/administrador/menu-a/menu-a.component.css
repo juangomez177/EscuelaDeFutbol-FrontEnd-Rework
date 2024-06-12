@@ -1,0 +1,32 @@
+nav {
+  background-color: #333;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+li {
+  margin-right: 1em;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background-color: #4caf50;
+}
+
+.active-option {
+  background-color: #4caf50;
+}

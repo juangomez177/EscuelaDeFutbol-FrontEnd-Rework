@@ -1,0 +1,75 @@
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="footer-title">Contacto <br /></h4>
+        <div class="footer-info-container">
+          <div class="info-icon">
+            <fa-icon [icon]="phoneIcon"></fa-icon>
+            <span>{{ infoAsoFutbol?.telefono }}</span>
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="envelopeIcon"></fa-icon>
+            <span>{{ infoAsoFutbol?.correo }}</span>
+          </div>
+          <div class="info-icon">
+            <fa-icon [icon]="mapMarkerIcon"></fa-icon>
+            <span>{{ infoAsoFutbol?.direccion }}</span>
+          </div>
+          <div class="social-icons">
+            <div class="footer-info">
+              <a [href]="infoAsoFutbol?.facebook" target="_blank">
+                <fa-icon
+                  [icon]="facebookIcon"
+                  style="color: white"
+                  class="social-icon facebook-icon"
+                ></fa-icon>
+              </a>
+            </div>
+            <div class="footer-info">
+              <a [href]="infoAsoFutbol?.x" target="_blank">
+                <fa-icon
+                  [icon]="xIcon"
+                  style="color: white"
+                  class="social-icon x-icon"
+                ></fa-icon>
+              </a>
+            </div>
+            <div class="footer-info">
+              <a [href]="infoAsoFutbol?.instagram" target="_blank">
+                <fa-icon
+                  [icon]="instagramIcon"
+                  style="color: white"
+                  class="social-icon instagram-icon"
+                ></fa-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4 class="footer-title">Patrocinadores</h4>
+        <div class="sponsor-logos">
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              infoAsoFutbol?.sponsor1
+            }}"
+            alt="Sponsor 1"
+          />
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              infoAsoFutbol?.sponsor2
+            }}"
+            alt="Sponsor 2"
+          />
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              infoAsoFutbol?.sponsor3
+            }}"
+            alt="Sponsor 3"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

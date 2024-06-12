@@ -1,0 +1,626 @@
+<p>Gestión de equipos</p>
+
+<!-- Mostrar lista de equipos -->
+<div *ngIf="lista">
+  <h2>Mis Equipos</h2>
+
+  <!-- Botón Agregar equipos-->
+  <button
+    type="button"
+    class="add-button"
+    [routerLink]="['/aso-futbol/administrador/equipo/nuevo']"
+    (click)="lista = false; form = true"
+  >
+    Agregar equipo
+  </button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Logo</th>
+        <th>Nombre de equipo</th>
+        <th>Categoría</th>
+        <th>Capitán</th>
+        <th>Entrenador</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipo of equipos">
+        <td>{{ equipo.id }}</td>
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ equipo.logo }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ equipo.nombre_equipo }}</td>
+        <td>{{ equipo.categoria }}</td>
+        <td>{{ equipo.capitan }}</td>
+        <td>{{ equipo.entrenador }}</td>
+        <td>
+          <button
+            type="button"
+            class="delete"
+            title="delete equipo"
+            (click)="delete(equipo)"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            class="edit"
+            title="edit equipo"
+            (click)="lista = false; editForm = true; editarEquipo(equipo)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Agregar equipo -->
+<div *ngIf="form">
+  <h2>Nuevo Equipo</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-equipo">Nombre del Equipo: </label>
+        <input id="new-equipo" #equipoName required />
+      </div>
+
+      <div class="form-field">
+        <label for="new-categoria">Categoría: </label>
+        <select id="new-categoria" #equipoCategoria required>
+          <option value="nada"></option>
+          <option value="infantil">Infantil</option>
+          <option value="cadete">Cadete</option>
+          <option value="juvenil">Juvenil</option>
+          <option value="adulto">Adulto</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="new-descripcion">Descripción: </label>
+        <textarea
+          id="new-descripcion"
+          #equipoDescripcion
+          required
+          rows="4"
+          style="width: 89%"
+        ></textarea>
+      </div>
+      <div class="form-field">
+        <label for="new-capitan">Capitán: </label>
+        <input id="new-capitan" #equipoCapitan required />
+      </div>
+      <div class="form-field">
+        <label for="new-entrenador">Entrenador: </label>
+        <input id="new-entrenador" #equipoEntrenador required />
+      </div>
+
+      <div class="form-field">
+        <label for="new-logo">Logo:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ equipo.logo }}"
+            style="width: 200px; height: 250px"
+          />
+          <br />
+          <br />
+          <input
+            style="width: 300px"
+            id="file-upload"
+            type="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button
+      type="button"
+      class="add-button"
+      (click)="
+        add(
+          equipoName.value,
+          equipoCategoria.value,
+          equipoDescripcion.value,
+          equipoCapitan.value,
+          equipoEntrenador.value
+        );
+        equipoName.value = '';
+        equipoCategoria.value = '';
+        equipoDescripcion.value = '';
+        equipoCapitan.value = '';
+        equipoEntrenador.value = '';
+        selectedFile = null
+      "
+    >
+      Agregar
+    </button>
+
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); lista = true; form = false"
+    >
+      Volver
+    </button>
+
+    <!-- Botón Limpiar -->
+    <button
+      type="button"
+      class="limpiar"
+      (click)="
+        mostrarSweetAlert2();
+        equipoName.value = '';
+        equipoCategoria.value = '';
+        equipoDescripcion.value = '';
+        equipoCapitan.value = '';
+        equipoEntrenador.value = '';
+        selectedFile = null
+      "
+    >
+      Limpiar
+    </button>
+  </div>
+</div>
+
+<!-- Formulario Agregar partido -->
+<div *ngIf="formP && equipoSeleccionado">
+  <h2>Nuevo Partido para equipo: {{ equipoSeleccionado.nombre_equipo }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="estado">Estado:</label>
+        <select id="estado" #estado>
+          <option value="nada"></option>
+          <option value="ganado">Ganado</option>
+          <option value="perdido">Perdido</option>
+          <option value="empate">Empate</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="golesFavor">Goles Favor:</label>
+        <input id="golesFavor" type="number" #golesFavor />
+      </div>
+
+      <div class="form-field">
+        <label for="golesContra">Goles Contra:</label>
+        <input id="golesContra" type="number" #golesContra />
+      </div>
+
+      <div class="form-field">
+        <label for="faltasCom">Faltas Cometidas:</label>
+        <input id="faltasCom" type="number" #faltasCom />
+      </div>
+
+      <div class="form-field">
+        <label for="faltasRec">Faltas Recibidas:</label>
+        <input id="faltasRec" type="number" #faltasRec />
+      </div>
+
+      <div class="form-field">
+        <label for="fecha">Fecha:</label>
+        <input id="fecha" type="date" #fecha />
+      </div>
+
+      <div class="form-field">
+        <label for="lugar">Lugar:</label>
+        <input id="lugar" type="text" #lugar />
+      </div>
+
+      <div class="form-field">
+        <label for="rival">Equipo Rival:</label>
+        <select id="rival" #rival>
+          <option value="nada"></option>
+          <option
+            *ngFor="let equipo of selectorEquipos"
+            [value]="equipo.nombre_equipo"
+          >
+            {{ equipo.nombre_equipo }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-buttons">
+    <button
+      type="button"
+      class="add-button"
+      (click)="
+        addP(
+          equipoSeleccionado.id,
+          estado.value,
+          golesFavor.value,
+          golesContra.value,
+          faltasCom.value,
+          faltasRec.value,
+          fecha.value,
+          lugar.value,
+          rival.value
+        );
+        golesFavor.value = '';
+        golesContra.value = '';
+        faltasCom.value = '';
+        faltasRec.value = '';
+        fecha.value = '';
+        lugar.value = '';
+        rival.value = ''
+      "
+    >
+      Agregar
+    </button>
+
+    <button
+      type="button"
+      class="volver"
+      (click)="editForm = true; formP = false"
+    >
+      Volver
+    </button>
+
+    <button
+      type="button"
+      class="limpiar"
+      (click)="
+        mostrarSweetAlert2();
+        golesFavor.value = '';
+        golesContra.value = '';
+        faltasCom.value = '';
+        faltasRec.value = '';
+        fecha.value = '';
+        lugar.value = '';
+        rival.value = ''
+      "
+    >
+      Limpiar
+    </button>
+  </div>
+</div>
+
+<!-- Formulario Editar Equipo -->
+<div *ngIf="editForm && equipoSeleccionado">
+  <h2>Editando equipo: {{ equipoSeleccionado.nombre_equipo }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-logo">Logo:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              equipoSeleccionado.logo
+            }}"
+            style="width: 200px; height: 250px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+          <br />
+          <br />
+          <input
+            style="width: 300px"
+            id="file-upload"
+            type="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-equipo">Nombre:</label>
+        <input
+          id="edit-equipo"
+          [(ngModel)]="equipoSeleccionado.nombre_equipo"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="new-categoria">Categoría: </label>
+        <select
+          id="new-categoria"
+          [(ngModel)]="equipoSeleccionado.categoria"
+          #equipoCategoria
+          required
+        >
+          <option [value]="equipoSeleccionado.categoria">
+            {{ equipoSeleccionado.categoria }}
+          </option>
+          <option
+            *ngFor="let categoria of obtenerCategorias()"
+            [value]="categoria"
+          >
+            {{ categoria }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-descripcion">Descripción:</label>
+        <textarea
+          id="edit-descripcion"
+          [(ngModel)]="equipoSeleccionado.descripcion"
+          rows="4"
+          style="width: 89%"
+        ></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="edit-capitan">Capitán:</label>
+        <input id="edit-capitan" [(ngModel)]="equipoSeleccionado.capitan" />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-entrenador">Entrenador:</label>
+        <input
+          id="edit-entrenador"
+          [(ngModel)]="equipoSeleccionado.entrenador"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-logo">Nombre Logo:</label>
+        <input id="edit-logo" [(ngModel)]="equipoSeleccionado.logo" readonly />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="add-button" (click)="edit(equipoSeleccionado)">
+      Guardar
+    </button>
+
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); editForm = false; lista = true"
+    >
+      Volver
+    </button>
+  </div>
+
+  <!-- Mostrar lista de jugadores de cada equipo -->
+  <h2>Jugadores</h2>
+
+  <!-- Botón Agregar jugadores -->
+  <button
+    type="button"
+    class="add-button"
+    title="add jugador"
+    [routerLink]="['/aso-futbol/administrador/jugador/nuevo']"
+  >
+    Agregar Jugador
+  </button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ID Equipo</th>
+        <th>Foto</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Categoría</th>
+        <th>Nombre Equipo</th>
+        <th>Posición</th>
+        <th>Número de Camiseta</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let jugador of jugadores">
+        <td>{{ jugador.id }}</td>
+        <td>{{ jugador.id_equipo }}</td>
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ jugador.foto }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ jugador.nombre }}</td>
+        <td>{{ jugador.edad }}</td>
+        <td>{{ jugador.categoria }}</td>
+        <td>{{ jugador.nombre_equipo }}</td>
+        <td>{{ jugador.posicion }}</td>
+        <td>{{ jugador.n_camiseta }}</td>
+        <td>{{ jugador.telefono }}</td>
+        <td>{{ jugador.correo }}</td>
+        <td>
+          <button
+            type="button"
+            class="edit"
+            title="edit jugador"
+            [routerLink]="['/aso-futbol/administrador/jugador', jugador.id]"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mostrar lista de partidos de cada equipo -->
+  <h2>Partidos</h2>
+  <!-- Botón Agregar partidos -->
+  <button
+    type="button"
+    class="add-button"
+    (click)="editForm = false; formP = true; getSelectorEquipos()"
+  >
+    Agregar partido
+  </button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ID Equipo</th>
+        <th>Estado</th>
+        <th>Goles Favor</th>
+        <th>Goles Contra</th>
+        <th>Faltas Cometidas</th>
+        <th>Faltas Recibidas</th>
+        <th>Fecha</th>
+        <th>Lugar</th>
+        <th>Rival</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let partido of partidos">
+        <td>{{ partido.id }}</td>
+        <td>{{ partido.id_equipo }}</td>
+        <td>{{ partido.estado }}</td>
+        <td>{{ partido.goles_favor }}</td>
+        <td>{{ partido.goles_contra }}</td>
+        <td>{{ partido.faltas_cometidas }}</td>
+        <td>{{ partido.faltas_recibidas }}</td>
+        <td>{{ partido.fecha }}</td>
+        <td>{{ partido.lugar }}</td>
+        <td>{{ partido.equipo_rival }}</td>
+        <td>
+          <button
+            type="button"
+            class="delete"
+            title="delete partido"
+            (click)="deleteP(partido)"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            class="edit"
+            title="edit equipo"
+            (click)="editForm = false; editFormP = true; editarPartido(partido)"
+          >
+            Editar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Editar Partido -->
+<div *ngIf="editFormP && partidoSeleccionado && equipoSeleccionado">
+  <h2>Editando Partidos para equipo: {{ equipoSeleccionado.nombre_equipo }}</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="edit-partido">Estado: </label>
+        <select
+          id="edit-partido"
+          [(ngModel)]="partidoSeleccionado.estado"
+          #estado
+        >
+          <option [ngValue]="partidoSeleccionado.estado">
+            {{ partidoSeleccionado.estado }}
+          </option>
+          <option
+            *ngIf="partidoSeleccionado.estado !== 'Ganado'"
+            value="ganado"
+          >
+            Ganado
+          </option>
+          <option
+            *ngIf="partidoSeleccionado.estado !== 'Perdido'"
+            value="perdido"
+          >
+            Perdido
+          </option>
+          <option
+            *ngIf="partidoSeleccionado.estado !== 'Empate'"
+            value="empate"
+          >
+            Empate
+          </option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Goles Favor: </label>
+        <input
+          id="edit-partido"
+          type="number"
+          [(ngModel)]="partidoSeleccionado.goles_favor"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Goles Contra: </label>
+        <input
+          id="edit-partido"
+          type="number"
+          [(ngModel)]="partidoSeleccionado.goles_contra"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Faltas Cometidas: </label>
+        <input
+          id="edit-partido"
+          type="number"
+          [(ngModel)]="partidoSeleccionado.faltas_cometidas"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Faltas Recibidas: </label>
+        <input
+          id="edit-partido"
+          type="number"
+          [(ngModel)]="partidoSeleccionado.faltas_recibidas"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Fecha: </label>
+        <input id="edit-partido" [(ngModel)]="partidoSeleccionado.fecha" />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Lugar: </label>
+        <input
+          id="edit-partido"
+          type="text"
+          [(ngModel)]="partidoSeleccionado.lugar"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-partido">Equipo Rival: </label>
+        <input
+          id="edit-partido"
+          [(ngModel)]="partidoSeleccionado.equipo_rival"
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      type="button"
+      class="add-button"
+      (click)="
+        editP(partidoSeleccionado);
+        editFormP = false;
+        editForm = true;
+        getPartidosEquipo(equipoSeleccionado.id)
+      "
+    >
+      Guardar
+    </button>
+
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="editFormP = false; editForm = true"
+    >
+      Volver
+    </button>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+.footer {
+  background-color: rgba(51, 51, 51, 0.9);
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footer-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.footer-info-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.footer-info fa-icon {
+  margin-right: 5px;
+}
+
+.footer-info span {
+  display: flex;
+  align-items: center;
+}
+
+.footer-info span:first-child {
+  margin-right: 5px;
+}
+
+.footer-info span:last-child {
+  margin-left: 5px;
+}
+
+.footer-info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+.sponsor-logos img {
+  width: 125px;
+  margin: 30px;
+}
+
+.sponsor-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.footer-info i {
+  transition: color 0.3s ease;
+}
+
+.footer-info i:hover {
+  color: #ffcc00;
+}
+
+.sponsor-logos img {
+  transition: transform 0.3s ease;
+}
+
+.sponsor-logos img:hover {
+  transform: scale(1.7);
+}
+button {
+  background-color: rgb(21, 131, 52);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+
+div button {
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: rgb(17, 177, 251);
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
+.info-icon {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
+.info-icon fa-icon {
+  margin-right: 10px;
+}

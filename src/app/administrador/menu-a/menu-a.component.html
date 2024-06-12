@@ -1,0 +1,26 @@
+<nav>
+  <ul>
+    <li>
+      <button
+        routerLink="/aso-futbol/administrador/equipo"
+        routerLinkActive="active-option"
+      >
+        Gestionar Equipos
+      </button>
+    </li>
+    <li>
+      <button
+        routerLink="/aso-futbol/administrador/jugador"
+        routerLinkActive="active-option"
+      >
+        Gestionar Jugadores
+      </button>
+    </li>
+    <li>
+      <button routerLink="/aso-futbol/usuario/inicio">
+        Pasar al modo usuario
+      </button>
+    </li>
+    <li><button (click)="logout()">Cerrar sesión</button></li>
+  </ul>
+</nav>

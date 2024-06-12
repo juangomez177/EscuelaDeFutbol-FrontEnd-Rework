@@ -1,0 +1,164 @@
+<p>Visualizar jugadores</p>
+
+<!-- Mostrar lista de jugadores -->
+<div *ngIf="lista">
+  <h2>Jugadores</h2>
+
+  <input
+    type="text"
+    [(ngModel)]="filtro"
+    (input)="filtrarJugadores()"
+    placeholder="Filtro de jugadores"
+  />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Categoría</th>
+        <th>Nombre Equipo</th>
+        <th>Posición</th>
+        <th>Número de Camiseta</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let jugador of jugadoresFiltrados">
+        <td>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{ jugador.foto }}"
+            style="width: 75px; height: 75px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </td>
+        <td>{{ jugador.nombre }}</td>
+        <td>{{ jugador.edad }}</td>
+        <td>{{ jugador.categoria }}</td>
+        <td>{{ jugador.nombre_equipo }}</td>
+        <td>{{ jugador.posicion }}</td>
+        <td>{{ jugador.n_camiseta }}</td>
+        <td>
+          <button
+            type="button"
+            class="edit"
+            title="details jugador"
+            (click)="lista = false; editForm = true; visualizarJugador(jugador)"
+          >
+            Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulario Visualizar jugador -->
+<div *ngIf="editForm && jugadorSeleccionado">
+  <h2>Detalles Jugador</h2>
+  <div class="formMain">
+    <div>
+      <div class="form-field">
+        <label for="new-Foto">Foto:</label>
+        <div>
+          <img
+            src="https://files-asofutbol.s3.amazonaws.com/{{
+              jugadorSeleccionado.foto
+            }}"
+            style="width: 200px; height: 250px"
+            onerror="this.onerror=null; this.src='/assets/images/no_image.png';"
+          />
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="edit-jugador">Nombre </label>
+        <input
+          id="edit-jugador"
+          readonly
+          [(ngModel)]="jugadorSeleccionado.nombre"
+        />
+      </div>
+      <div class="form-field">
+        <label for="edit-edad">Edad: </label>
+        <input
+          id="edit-edad"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.edad"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-categoria">Categoría: </label>
+        <input
+          id="edit-categoria"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.categoria"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-equipo">Equipo: </label>
+        <input
+          id="edit-equipo"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.nombre_equipo"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-posicion">Posición: </label>
+        <input
+          id="edit-posicion"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.posicion"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-camiseta">Número de Camiseta: </label>
+        <input
+          id="edit-camiseta"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.n_camiseta"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-telefono">Teléfono: </label>
+        <input
+          id="edit-telefono"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.telefono"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="edit-correo">Correo: </label>
+        <input
+          id="edit-correo"
+          readonly
+          type="text"
+          [(ngModel)]="jugadorSeleccionado.correo"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      class="volver"
+      (click)="volver(); editForm = false; lista = true"
+    >
+      Volver
+    </button>
+  </div>
+</div>
